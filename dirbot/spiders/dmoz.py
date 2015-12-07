@@ -6,10 +6,9 @@ from dirbot.items import Website
 
 class DmozSpider(Spider):
     name = "dmoz"
-    allowed_domains = ["dmoz.org"]
+    allowed_domains = ["https://www.pinterest.com/"]
     start_urls = [
-        "http://www.dmoz.org/Computers/Programming/Languages/Python/Books/",
-        "http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/",
+        "https://www.pinterest.com/Girl_in_Dublin/followers/"
     ]
 
     def parse(self, response):
@@ -20,15 +19,15 @@ class DmozSpider(Spider):
         @url http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/
         @scrapes name
         """
-        sel = Selector(response)
-        sites = sel.xpath('//ul[@class="directory-url"]/li')
-        items = []
-
-        for site in sites:
+        #sel = Selector(response)
+        accounts = response.xpath('//a[@class="userWrapper"]')
+        items =[]
+        
+        for user in accounts:
             item = Website()
-            item['name'] = site.xpath('a/text()').extract()
-            item['url'] = site.xpath('a/@href').extract()
-            item['description'] = site.xpath('text()').re('-\s[^\n]*\\r')
+            item['usr_name'] = user.xpath('./@href').extract()[0]
+            item['pins'] = user.xpath('.//p[@class="userStats"]/span[@class="value"]/text()').extract()[0]
+            item['followers'] = user.xpath('.//p[@class="userStats"]/span[@class="value"]/text()').extract()[1]
             items.append(item)
 
         return items
