@@ -5,7 +5,7 @@ class FilterAccountsPipeline(object):
     
     def process_item(self, item, spider):
         if item ['followers']:
-            try int(item['followers']):
+            try cint(item['followers']):
                 return item
             except ValueError:
                 raise DropItem('To Many Followers")
