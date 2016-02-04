@@ -7,9 +7,11 @@ from dirbot.items import Website
 class DmozSpider(Spider):
     name = "dmoz"
     allowed_domains = ["https://www.pinterest.com/"]
-    start_urls = [
-        "https://www.pinterest.com/Girl_in_Dublin/followers/"
-    ]
+    start_urls = ["https://www.pinterest.com/Girl_in_Dublin/followers/"]
+
+    def __init__(self,*args,**kwargs):
+        super(DmozSpider, self).__init__( *args, **kwargs)
+        self.download_delay = 6.0
 
     def parse(self, response):
         """
@@ -22,7 +24,7 @@ class DmozSpider(Spider):
         #sel = Selector(response)
         accounts = response.xpath('//a[@class="userWrapper"]')
         items =[]
-        
+
         for user in accounts:
             item = Website()
             item['usr_name'] = user.xpath('./@href').extract()[0]
